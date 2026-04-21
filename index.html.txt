@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Glow Offer Wall</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =====================
+GLOBAL
+===================== */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#fff;
+color:#222;
+}
+
+/* =====================
+TOP BANNER
+===================== */
+.topbar{
+background:#FF5CFA;
+color:#fff;
+text-align:center;
+padding:10px;
+font-weight:600;
+}
+
+/* =====================
+HEADER
+===================== */
+.header{
+text-align:center;
+padding:20px 10px;
+}
+
+.logo img{
+width:180px;
+}
+
+/* =====================
+TIMER
+===================== */
+.urgency{
+text-align:center;
+border-top:1px solid #eee;
+border-bottom:1px solid #eee;
+padding:18px;
+}
+
+.timer{
+font-size:26px;
+font-weight:700;
+letter-spacing:3px;
+}
+
+/* =====================
+GRID
+===================== */
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+padding:15px;
+max-width:1100px;
+margin:auto;
+}
+
+/* =====================
+CARD
+===================== */
+.card{
+background:#fff;
+border-radius:12px;
+box-shadow:0 4px 14px rgba(0,0,0,.07);
+overflow:hidden;
+position:relative;
+}
+
+.badge{
+position:absolute;
+top:8px;
+left:8px;
+background:#000;
+color:#fff;
+font-size:11px;
+padding:4px 8px;
+border-radius:4px;
+}
+
+.card img{
+width:100%;
+height:140px;
+object-fit:cover;
+}
+
+.content{
+padding:12px;
+}
+
+.brand{
+font-weight:700;
+margin-bottom:4px;
+}
+
+.desc{
+font-size:12px;
+color:#777;
+margin-bottom:8px;
+}
+
+.price{
+font-size:13px;
+margin-bottom:10px;
+}
+
+.old{
+text-decoration:line-through;
+color:#999;
+margin-right:6px;
+}
+
+.free{
+color:#FF5CFA;
+font-weight:700;
+}
+
+.cta{
+display:block;
+text-align:center;
+background:#FF5CFA;
+color:#fff;
+padding:11px;
+border-radius:6px;
+text-decoration:none;
+font-weight:600;
+transition:.25s;
+}
+
+.cta:hover{
+background:#e14de0;
+}
+
+/* =====================
+SOCIAL TOAST
+===================== */
+.toast{
+position:fixed;
+bottom:20px;
+left:20px;
+background:#fff;
+padding:12px 16px;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,.15);
+font-size:13px;
+display:none;
+z-index:999;
+}
+
+/* Desktop */
+@media(min-width:768px){
+.grid{
+grid-template-columns:repeat(4,1fr);
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+Free shipping within the USA, UK and Canada and Australia
+</div>
+
+<!-- HEADER -->
+<div class="header">
+<div class="logo">
+<img src="https://www.iffcobeauty.com/wp-content/uploads/2021/03/glow-logo-1.png">
+</div>
+</div>
+
+<!-- TIMER -->
+<div class="urgency">
+<div>This Offer Will End After:</div>
+<div class="timer" id="timer">23:59:59</div>
+</div>
+
+<!-- GRID -->
+<div class="grid" id="offerGrid"></div>
+
+<!-- SOCIAL PROOF -->
+<div class="toast" id="toast"></div>
+
+<script>
+
+/* ==========================
+COUNTDOWN TIMER
+==========================*/
+let t=86399;
+setInterval(()=>{
+let h=Math.floor(t/3600);
+let m=Math.floor((t%3600)/60);
+let s=t%60;
+
+timer.innerHTML=
+String(h).padStart(2,'0')+":"+
+String(m).padStart(2,'0')+":"+
+String(s).padStart(2,'0');
+
+if(t>0)t--;
+},1000);
+
+
+/* ==========================
+OFFERS ARRAY
+EDIT ONLY HERE
+==========================*/
+
+const offers=[
+
+{
+brand:"DYSON Airwrap",
+image:"https://www.dyson.ma/medialibrary/Group/Haircare/Mobile/Airwrap/Overview/308-Responsive-Page-Mobile-Overview-airwrap-in-use_.ashx?mw=2400",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$599",
+description:"Finish the quick survey to receive your sample"
+},
+
+{
+brand:"Shark FlexStyle",
+image:"https://res.cloudinary.com/sharkninja/image/upload/v1747058412/Shark/HD400SLUK/HD400SLUK_01H.jpg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$349",
+description:"Trending Miracle Knots styling system"
+},
+
+{
+brand:"Olaplex Bundle",
+image:"https://cdn11.bigcommerce.com/s-63354/images/stencil/1280x1280/products/4054/10811/OLAPLEX_No._3_Hair_Perfector_100ml_1__73845.1647008539.jpg?c=2&imbypass=on",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$120",
+description:"Professional hair repair collection"
+},
+
+{
+brand:"Sephora Spring Kit",
+image:"https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1681426236-sephora-favorites-vacay-all-day-beauty-value-set-64388670ae3b7.jpg?crop=1xw:1xh;center,top&resize=980:*",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$95",
+description:"Limited seasonal beauty samples"
+},
+
+{
+brand:"Red Prom Nails Kit",
+image:"https://cdn.shopify.com/s/files/1/0019/1843/5381/files/8._Crystal-Encrusted_Red_Glam_Coffin_Nails_-_Red_Prom_Nail_Ideas.jpg?v=1748680086",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$79",
+description:"Perfect prom-ready manicure set"
+},
+
+{
+brand:"Shein $750 Credit",
+image:"https://www.e-marketing.fr/wp-content/uploads/2025/07/Temu-nouveau-rival-Shein-F.jpg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$750",
+description:"Upgrade your Spring outfits"
+},
+
+{
+brand:"Amazon Gift Card",
+image:"https://www.thesun.co.uk/wp-content/uploads/2022/12/ac-consumer-amazon-cards-offplat.jpg?quality=80&strip=all&w=1080&h=1080&crop=1",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$500",
+description:"Popular shopping reward"
+},
+
+{
+brand:"Gucci Flora",
+image:"https://marionnaud.ma/cdn/shop/files/3616303048181_1080x.jpg?v=1719569669",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$145",
+description:"Luxury fragrance sample"
+},
+
+{
+brand:"Chanel Chance",
+image:"https://product.hstatic.net/200000192951/product/eau-tendre-eau-de-parfum-100ml_524cde61fa4d4b8e8c5fc2df2bec82ab_master_fc4752fdeaa744c69e7e9af6ff543cae_master.jpg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$176",
+description:"Iconic perfume testing offer"
+},
+
+{
+brand:"CeraVe Hydrating Set",
+image:"https://images-static.nykaa.com/media/catalog/product/e/1/e1c40fdCERAV00000023_1.jpg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$60",
+description:"Dermatologist skincare bundle"
+},
+
+{
+brand:"L'Oreal EverPure",
+image:"https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/loe/loe67295/l/8.jpg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$55",
+description:"Salon-quality haircare"
+},
+
+{
+brand:"Moroccanoil Treatment",
+image:"https://www.planetbeauty.com/cdn/shop/files/MoroccanOil_Treatment_.85.webp?v=1699903777",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$88",
+description:"Premium hair nourishment"
+},
+
+{
+brand:"Fenty Beauty Kit",
+image:"https://beautizshop.com/cdn/shop/files/FentyBeautySetMaroc.png?v=1764675773",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$99",
+description:"Complete glam essentials"
+},
+
+{
+brand:"T3 Curling Iron",
+image:"https://cdn.moshtare.com/images/originals/12-15-2025_0358pmf759904d2cb710b7a04a.jpeg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$199",
+description:"Professional styling tool"
+},
+
+{
+brand:"Revlon Volumizer",
+image:"https://maparami.ma/16494-large_default/revlon-one-step-volumizer-brosse-soufflante-sechante-et-volumisante-original-.jpg",
+link:"YOUR_AFFILIATE_LINK_HERE",
+originalPrice:"$89",
+description:"Viral volume styling brush"
+}
+
+];
+
+
+/* ==========================
+DYNAMIC RENDER
+==========================*/
+
+const grid=document.getElementById("offerGrid");
+
+offers.forEach(offer=>{
+grid.innerHTML+=`
+<div class="card">
+<div class="badge">Bestseller</div>
+
+<img src="${offer.image}" alt="${offer.brand}">
+
+<div class="content">
+<div class="brand">${offer.brand}</div>
+<div class="desc">${offer.description}</div>
+
+<div class="price">
+<span class="old">${offer.originalPrice}</span>
+<span class="free">COMPLIMENTARY</span>
+</div>
+
+<a href="${offer.link}" class="cta" target="_blank">
+Get your free sample
+</a>
+</div>
+</div>
+`;
+});
+
+
+/* ==========================
+SOCIAL PROOF
+==========================*/
+const messages=[
+"Ella from Seattle just claimed her Dyson Airwrap!",
+"Emma from London redeemed Sephora Kit!",
+"Sophia from Miami received Olaplex Bundle!",
+"Grace from NYC claimed Prom Nails Kit!"
+];
+
+const toast=document.getElementById("toast");
+
+function showToast(){
+toast.innerText=
+messages[Math.floor(Math.random()*messages.length)];
+toast.style.display="block";
+setTimeout(()=>toast.style.display="none",4000);
+}
+
+setInterval(showToast,6000);
+
+</script>
+
+</body>
+</html>
